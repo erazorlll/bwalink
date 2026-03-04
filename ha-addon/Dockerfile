@@ -1,12 +1,18 @@
 ARG BUILD_FROM="alpine"
-FROM $BUILD_FROM
+FROM ${BUILD_FROM}
 
-RUN apk update
-RUN apk --no-cache add bash curl curl-dev ruby-dev build-base
-RUN apk --no-cache add ruby ruby-io-console ruby-irb \
-  ruby-json ruby-etc ruby-bigdecimal ruby-rdoc \
-  libffi-dev zlib-dev ruby-bundler wget 
-RUN bundle config set deployment 'true'
+RUN apk update && apk add --no-cache \
+    bash \
+    curl \
+    ruby \
+    ruby-dev \
+    ruby-bundler \
+    libffi-dev \
+    zlib-dev \
+    socat \
+    tzdata \
+    build-base \
+  && bundle config set deployment 'true'
 
 ## DON'T install public version as in original code
 #RUN gem install balboa_worldwide_app
@@ -40,4 +46,4 @@ RUN rm -rf /var/cache/apk/*
 ADD docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
-CMD [ "/docker-entrypoint.sh" ]
+CMD ["/docker-entrypoint.sh"]
